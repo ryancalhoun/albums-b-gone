@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+
+  "name": "RoeRunner | Clean-it Facebook",
+  "description": "Cleans a list of Facebook albums by ID.",
+  "version": "1.0",
+
+  "icons": {
+    "256": "roerunner-256.png",
+    "128": "roerunner-128.png"
+  },
+
+  "browser_action": {
+    "default_icon": "roerunner-256.png",
+    "default_popup": "popup.html"
+  },
+  "background": {
+	"scripts": [ "background.js" ]
+  },
+  "content_scripts": [{
+    "run_at": "document_end",
+    "matches": ["https://www.facebook.com/*"],
+    "js": ["remove.js"]
+  }],
+  "permissions": [
+    "https://www.facebook.com/",
+    "tabs",
+	"storage"
+  ]
+}
