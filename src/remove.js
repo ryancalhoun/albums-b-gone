@@ -22,8 +22,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   function confirmDelete() {
     var confirmButton = document.querySelector('form button[name=confirmed]');
     if(confirmButton) {
-      confirmButton.click();
       sendResponse('ok');
+      confirmButton.click();
     } else {
       setTimeout(confirmDelete, 500);
     }

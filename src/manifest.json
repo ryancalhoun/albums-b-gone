@@ -1,17 +1,17 @@
 {
   "manifest_version": 2,
 
-  "name": "RoeRunner | Clean-it Facebook",
+  "name": "Albums B Gone",
   "description": "Cleans a list of Facebook albums by ID.",
   "version": "1.0",
 
   "icons": {
-    "256": "roerunner-256.png",
-    "128": "roerunner-128.png"
+    "256": "albums-b-gone-icon-256b.png",
+    "128": "albums-b-gone-icon-128b.png",
+    "48": "albums-b-gone-icon-48b.png"
   },
-
   "browser_action": {
-    "default_icon": "roerunner-256.png",
+    "default_icon": "albums-b-gone-icon-128b.png",
     "default_popup": "popup.html"
   },
   "background": {
