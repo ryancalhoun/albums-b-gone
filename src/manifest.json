@@ -19,10 +19,15 @@
   },
   "content_scripts": [{
     "run_at": "document_end",
+    "matches": ["https://roerunner.com/portal/*"],
+    "js": ["version.js"]
+  }, {
+    "run_at": "document_end",
     "matches": ["https://www.facebook.com/*"],
     "js": ["remove.js"]
   }],
   "permissions": [
+	"https://roerunner.com/",
     "https://www.facebook.com/",
     "tabs",
 	"storage"
