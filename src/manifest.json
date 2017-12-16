@@ -3,7 +3,7 @@
 
   "name": "Albums B Gone",
   "description": "Cleans a list of Facebook albums by ID.",
-  "version": "1.0",
+  "version": "1.1",
 
   "icons": {
     "256": "albums-b-gone-icon-256b.png",
