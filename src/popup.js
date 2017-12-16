@@ -55,11 +55,17 @@
     });
   }
 
-  function onInput() {
+  function onInput(e) {
     if(data && data.running) {
       return;
     }
-    if(this.value && this.value.match(/^(\d+\s*)+$/)) {
+
+    var value = this.value;
+    var clipboardData = e.clipboardData || window.clipboardData;
+    if(clipboardData)
+      value += clipboardData.getData('text/plain');
+
+    if(value && value.match(/^(\d+\s*)+$/)) {
       document.querySelector('button[name=play]').removeAttribute('disabled');
     } else {
       document.querySelector('button[name=play]').setAttribute('disabled', '');
