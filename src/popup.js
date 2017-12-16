@@ -17,24 +17,24 @@
       data = JSON.parse(localStorage.getItem(key));
     } catch(e) {}
 
-    if(data && data.list.length > 0) {
+    if(data) {
       var list = '';
       for(var i = 0; i < data.list.length; ++i) {
         list += data.list[i] + '\n';
       }
       
       document.querySelector('textarea').value = list;
+    }
 
-      if(data.running) {
-        document.querySelector('textarea').setAttribute('readonly', '');
-        document.querySelector('button[name=play]').setAttribute('disabled', '');
-        document.querySelector('button[name=pause]').removeAttribute('disabled');
-      } else {
-        document.querySelector('textarea').removeAttribute('readonly');
-        document.querySelector('textarea').focus();
-        document.querySelector('button[name=play]').removeAttribute('disabled');
-        document.querySelector('button[name=pause]').setAttribute('disabled', '');
-      }
+    if(data && data.running) {
+      document.querySelector('textarea').setAttribute('readonly', '');
+      document.querySelector('button[name=play]').setAttribute('disabled', '');
+      document.querySelector('button[name=pause]').removeAttribute('disabled');
+    } else if(data && data.list.length > 0) {
+      document.querySelector('textarea').removeAttribute('readonly');
+      document.querySelector('textarea').focus();
+      document.querySelector('button[name=play]').removeAttribute('disabled');
+      document.querySelector('button[name=pause]').setAttribute('disabled', '');
     } else {
       document.querySelector('textarea').removeAttribute('readonly');
       document.querySelector('textarea').focus();
