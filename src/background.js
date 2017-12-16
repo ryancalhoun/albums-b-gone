@@ -1,4 +1,10 @@
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+if(window.chrome) {
+  window.browser = window.chrome;
+}
+if(window.msBrowser) {
+  window.browser = window.msBrowser;
+}
+browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
   var key = 'roerunner-cleanit-facebook';
   var data = {};
 
@@ -21,7 +27,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
     if(data.list.length == 0) {
       data.running = false;
-      chrome.runtime.sendMessage('update-display');
+      browser.runtime.sendMessage('update-display');
       return;
     }
 
@@ -30,10 +36,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     console.log("removeNext", id);
     doRemove = true;
     if(tab) {
-      chrome.tabs.update(tab.id, {url: 'https://facebook.com/' + id});
+      browser.tabs.update(tab.id, {url: 'https://facebook.com/' + id});
     } else {
-      chrome.tabs.create({url: 'https://facebook.com/' + id}, function(t) {
-        tab = t;
+      browser.tabs.query({active: true, lastFocusedWindow: true}, function(array_of_Tabs) {
+        var active = array_of_Tabs[0];
+        browser.tabs.create({url: 'https://facebook.com/' + id, index: active.index}, function(t) {
+          tab = t;
+        });
       });
     }
   }
@@ -46,23 +55,24 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     console.log("onRemoveComplete.2", JSON.stringify(data));
 
     localStorage.setItem(key, JSON.stringify(data));
-    chrome.runtime.sendMessage('update-display');
+    browser.runtime.sendMessage('update-display');
 
     if(data.running) {
       removeNext();
     } else {
-      chrome.tabs.remove(tab.id);
+      browser.tabs.remove(tab.id);
+      browser.runtime.sendMessage('update-display');
     }
   }
 
   var waitingForSuccess;
-  chrome.tabs.onUpdated.addListener(function(tabId, info) {
+  browser.tabs.onUpdated.addListener(function(tabId, info) {
     if(doRemove && data.running && tab && tab.id == tabId && info.status == 'complete') {
-      chrome.tabs.get(tab.id, function(t) {
+      browser.tabs.get(tab.id, function(t) {
         console.log("Do remove", data.list[0], info);
         if(t.url.indexOf(data.list[0] + "") > -1) {
           console.log("Send message", data.list[0]);
-          chrome.tabs.sendMessage(tab.id, 'remove', function(s) {
+          browser.tabs.sendMessage(tab.id, 'remove', function(s) {
             console.log(s);
             if(s == 'ok') {
               waitingForSuccess = true;
@@ -76,7 +86,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
         }
       });
     } else if(tab && tab.id == tabId){
-      chrome.tabs.get(tab.id, function(t) {
+      browser.tabs.get(tab.id, function(t) {
         if(waitingForSuccess && t.url.indexOf('/groups/') > -1) {
           waitingForSuccess = false;
           console.log("C2", t);

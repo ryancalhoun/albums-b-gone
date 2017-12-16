@@ -29,6 +29,7 @@
   "permissions": [
 	"https://roerunner.com/",
     "https://www.facebook.com/",
+    "activeTab",
     "tabs",
 	"storage"
   ]

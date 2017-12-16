@@ -1,4 +1,10 @@
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+if(window.chrome) {
+  window.browser = window.chrome;
+}
+if(window.msBrowser) {
+  window.browser = window.msBrowser;
+}
+browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
   if(request != 'remove') {
     return;
