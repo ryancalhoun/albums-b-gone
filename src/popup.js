@@ -2,7 +2,7 @@
   var key = 'roerunner-cleanit-facebook';
   var data = {};
 
-  if(window.chrome) {
+  if(!window.browser && window.chrome) {
     window.browser = window.chrome;
   }
 
@@ -58,9 +58,15 @@
     }
 
     var value = this.value;
-    var clipboardData = e.clipboardData || window.clipboardData;
-    if(clipboardData)
-      value += clipboardData.getData('text/plain');
+
+    try {
+      var clipboardData = e && e.clipboardData || window.clipboardData;
+      if(clipboardData)
+        value += clipboardData.getData('text/plain');
+    } catch(e) {
+      setTimeout(onInput);
+      return;
+    }
 
     if(value && value.match(/^(\d+\s*)+$/)) {
       document.querySelector('button[name=play]').removeAttribute('disabled');

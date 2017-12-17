@@ -1,4 +1,4 @@
-if(window.chrome) {
+if(!window.browser && window.chrome) {
   window.browser = window.chrome;
 }
 browser.runtime.onMessage.addListener(function(message, sender, sendResponse){

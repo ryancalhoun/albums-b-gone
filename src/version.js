@@ -1,5 +1,5 @@
 var meta = document.createElement('meta');
-if(window.chrome) {
+if(!window.browser && window.chrome) {
   window.browser = window.chrome;
 }
 
