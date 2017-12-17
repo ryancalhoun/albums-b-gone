@@ -1,9 +1,6 @@
 if(window.chrome) {
   window.browser = window.chrome;
 }
-if(window.msBrowser) {
-  window.browser = window.msBrowser;
-}
 browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
   var key = 'roerunner-cleanit-facebook';
   var data = {};
@@ -33,7 +30,6 @@ browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 
     var id = data.list[0];
-    console.log("removeNext", id);
     doRemove = true;
     if(tab) {
       browser.tabs.update(tab.id, {url: 'https://facebook.com/' + id});
@@ -48,11 +44,8 @@ browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
   }
 
   function onRemoveComplete() {
-    console.log("onRemoveComplete", JSON.stringify(data));
-
     data.list.shift();
     data.running = data.list.length > 0;
-    console.log("onRemoveComplete.2", JSON.stringify(data));
 
     localStorage.setItem(key, JSON.stringify(data));
     browser.runtime.sendMessage('update-display');
@@ -69,16 +62,12 @@ browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
   browser.tabs.onUpdated.addListener(function(tabId, info) {
     if(doRemove && data.running && tab && tab.id == tabId && info.status == 'complete') {
       browser.tabs.get(tab.id, function(t) {
-        console.log("Do remove", data.list[0], info);
         if(t.url.indexOf(data.list[0] + "") > -1) {
-          console.log("Send message", data.list[0]);
           browser.tabs.sendMessage(tab.id, 'remove', function(s) {
-            console.log(s);
             if(s == 'ok') {
               waitingForSuccess = true;
             }
             if(s == 'not-found') {
-              console.log("C1", "not found");
               onRemoveComplete();
             }
           });
@@ -89,7 +78,6 @@ browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
       browser.tabs.get(tab.id, function(t) {
         if(waitingForSuccess && t.url.indexOf('/groups/') > -1) {
           waitingForSuccess = false;
-          console.log("C2", t);
           setTimeout(onRemoveComplete, 500);
         }
       });

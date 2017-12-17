@@ -5,9 +5,6 @@
   if(window.chrome) {
     window.browser = window.chrome;
   }
-  if(window.msBrowser) {
-    window.browser = window.msBrowser;
-  }
 
   setTimeout(updateDisplay, 250);
   setTimeout(wireListeners);
