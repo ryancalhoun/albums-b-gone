@@ -22,9 +22,23 @@ task edge: [:manifest, :build, :dist] do
   mkdir_p 'build/Extension'
 
   manifest = Marshal.load( Marshal.dump($manifest) )
+
   v = manifest['version'].split '.'
   v << '0' until v.size >= 4
   manifest['version'] = v.join('.')
+
+  manifest.delete 'manifest_version'
+  manifest['permissions'].reject! {|x| x == 'activeTab'}
+  manifest['permissions'] << "*://*/*"
+  manifest['background']['persistent'] = true
+=begin
+"browser_specific_settings": {
+    "edge": {
+        "browser_action_next_to_addressbar": true
+    }
+}
+=end
+
 
   xml = File.read('edge-manifest/AppXManifest.xml')
   manifest.each do |name,val|
