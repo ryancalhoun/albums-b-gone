@@ -8,11 +8,11 @@
   <Identity
     Name="19630RoeRunner.AlbumsBGone"
     Publisher="CN=79D26279-4C37-44E8-9BC0-AE67C12DAF1E"
-    Version="{{ version }}">
+    Version="{{ version }}"/>
 
   <Properties>
-    <DisplayName>{{ name }} </DisplayName>
-    <PublisherDisplayName> RoeRunner </PublisherDisplayName>
+    <DisplayName>{{ name }}</DisplayName>
+    <PublisherDisplayName>RoeRunner</PublisherDisplayName>
     <Logo>Assets/albums-b-gone-icon-50b.png</Logo>
   </Properties>
 
