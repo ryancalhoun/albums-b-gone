@@ -18,8 +18,8 @@ end
 
 task edge: [:manifest, :build, :dist] do
   rm_rf 'build/*'
-  mkdir_p 'build/Assets'
-  mkdir_p 'build/Extension'
+  mkdir_p 'build/edgeextension/manifest/Assets'
+  mkdir_p 'build/edgeextension/manifest/Extension'
 
   manifest = Marshal.load( Marshal.dump($manifest) )
 
@@ -31,14 +31,13 @@ task edge: [:manifest, :build, :dist] do
   manifest['permissions'].reject! {|x| x == 'activeTab'}
   manifest['permissions'] << "*://*/*"
   manifest['background']['persistent'] = true
-=begin
-"browser_specific_settings": {
+  manifest['browser_specific_settings'] = {
     "edge": {
-        "browser_action_next_to_addressbar": true
+      "browser_action_next_to_addressbar": true
     }
-}
-=end
+  }
 
+  cp 'edge-manifest/generationInfo.json', 'build/edgeextension/'
 
   xml = File.read('edge-manifest/AppXManifest.xml')
   manifest.each do |name,val|
@@ -46,18 +45,21 @@ task edge: [:manifest, :build, :dist] do
     xml.gsub! /{{\s*#{name}\s*}}/, val
   end
 
-  File.open('build/AppXManifest.xml', 'w') do |f|
+  File.open('build/edgeextension/manifest/AppXManifest.xml', 'w') do |f|
     f.write xml
   end
 
   Dir['edge-manifest/*.png'].each do |icon|
-    cp icon, 'build/Assets'
+    cp icon, 'build/edgeextension/manifest/Assets'
   end
   Dir['src/*'].each do |icon|
-    cp icon, 'build/Extension'
+    cp icon, 'build/edgeextension/manifest/Extension'
   end
 
-  File.open('build/Extension/manifest.json', 'w') do |f|
+  File.open('build/edgeextension/manifest/Extension/manifest.json', 'w') do |f|
     f.write JSON.pretty_generate(manifest)
   end
+
+  sh 'manifoldjs -l debug -p edgeextension package build/edgeextension/manifest/'
+  cp 'build/edgeextension/package/edgeExtension.appx', "dist/albums-b-gone-#{$manifest['version']}.appx"
 end

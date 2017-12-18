@@ -37,14 +37,21 @@
         BackgroundColor="white">
       </uap:VisualElements>
       <Extensions>
-      <uap3:Extension Category="windows.appExtension">
-        <uap3:AppExtension Name="com.microsoft.edge.extension"
-          Id="EdgeExtension"
-          PublicFolder="Extension"
-          DisplayName="{{ name }}">
-        </uap3:AppExtension>
-      </uap3:Extension>
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension Name="com.microsoft.edge.extension"
+            Id="EdgeExtension"
+            PublicFolder="Extension"
+            DisplayName="{{ name }}">
+            <uap3:Properties>
+              <Capabilities>
+                <Capability Name="websiteContent"/>
+                <Capability Name="websiteInfo"/>
+                <Capability Name="browserStorage"/>
+              </Capabilities>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
       </Extensions>
- </Application>
-</Applications>
+    </Application>
+  </Applications>
 </Package>
