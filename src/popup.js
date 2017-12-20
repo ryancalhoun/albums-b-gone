@@ -2,14 +2,15 @@
   var key = 'roerunner-cleanit-facebook';
   var data = {};
 
-  if(!window.browser && window.chrome) {
-    window.browser = window.chrome;
-  }
+  var browser = window.browser || window.chrome;
+  var safari = window.safari;
 
-  setTimeout(updateDisplay, 250);
+  window.updateDisplay = function(timeout) { setTimeout(_updateDisplay, timeout); };
+
   setTimeout(wireListeners);
+  updateDisplay(250);
 
-  function updateDisplay() {
+  function _updateDisplay() {
     try {
       data = JSON.parse(localStorage.getItem(key));
     } catch(e) {}
@@ -81,13 +82,19 @@
       list: document.querySelector('textarea').value.trim().split(/\s+/)
     }));
 
-    browser.runtime.sendMessage('update-state');
-    setTimeout(updateDisplay);
+    if(browser) {
+      browser.runtime.sendMessage('update-state');
+    } else if(safari) {
+      safari.extension.globalPage.contentWindow.updateState();
+    }
+    updateDisplay();
   }
 
-  browser.runtime.onMessage.addListener(function(message,sender,sendResponse){
-    if(message == 'update-display') {
-      setTimeout(updateDisplay);
-    }
-  });
+  if(browser) {
+    browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
+      if(message == 'update-display') {
+        updateDisplay();
+      }
+    });
+  }
 })();
