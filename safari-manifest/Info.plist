@@ -27,6 +27,8 @@
         <string>popup</string>
         <key>Filename</key>
         <string>popup.html</string>
+        <key>Height</key>
+        <integer>328</integer>
       </dict>
     </array>
     <key>Toolbar Items</key>
