@@ -4,7 +4,7 @@
   var browser = window.browser || window.chrome;
   var safari = window.safari;
 
-  window.updateDisplay = updateDisplay;
+  window.updateState = updateState;
 
   if(browser) {
     browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
@@ -43,10 +43,13 @@
 
       openTab(tab, id, function(t) {
         if(!tab) {
-          attachListener(tab, function(url) {
-            if(doRemove && data.running && tab) {
+          var waitingForSuccess;
+          attachListener(t, function(url) {
+            if(doRemove && data.running) {
               if(url.indexOf(data.list[0] + "") > -1) {
-                signalTab(tab, function(s) {
+                doRemove = false;
+                signalTab(t, function(s) {
+                  console.log("Signal", s);
                   if(s == 'ok') {
                     waitingForSuccess = true;
                   }
@@ -54,9 +57,9 @@
                     onRemoveComplete();
                   }
                 });
-                doRemove = false;
               }
             } else {
+              console.log("Group page", waitingForSuccess, url);
               if(waitingForSuccess && url.indexOf('/groups/') > -1) {
                 waitingForSuccess = false;
                 setTimeout(onRemoveComplete, 500);
@@ -69,6 +72,7 @@
     }
 
     function onRemoveComplete() {
+      console.log("Remove complete", data);
       data.list.shift();
       data.running = data.list.length > 0;
 
@@ -98,6 +102,7 @@
     if(browser) {
       if(tab) {
         browser.tabs.update(tab.id, {url: url});
+        cb(tab);
       } else {
         browser.tabs.query({active: true, lastFocusedWindow: true}, function(array_of_Tabs) {
           var active = array_of_Tabs[0];
@@ -133,8 +138,6 @@
   }
 
   function attachListener(tab, cb) {
-    var waitingForSuccess;
-
     if(browser) {
       browser.tabs.onUpdated.addListener(function(tabId, info) {
         if(tab && tab.id == tabId && info.status == 'complete') {
