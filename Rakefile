@@ -1,6 +1,6 @@
 require 'json'
 
-task default: [:chrome, :edge]
+task default: [:chrome, :edge, :safari]
 
 directory 'build'
 directory 'dist'
@@ -17,7 +17,7 @@ task chrome: [:manifest, :dist] do
 end
 
 task edge: [:manifest, :build, :dist] do
-  rm_rf 'build/*'
+  rm_rf 'build/edgeextension/'
   mkdir_p 'build/edgeextension/manifest/Assets'
   mkdir_p 'build/edgeextension/manifest/Extension'
 
@@ -45,7 +45,7 @@ task edge: [:manifest, :build, :dist] do
     xml.gsub! /{{\s*#{name}\s*}}/, val
   end
 
-  File.open('build/edgeextension/manifest/AppXManifest.xml', 'w') do |f|
+  File.open('build/edgeextension/manifest/appxmanifest.xml', 'w') do |f|
     f.write xml
   end
 
@@ -62,4 +62,23 @@ task edge: [:manifest, :build, :dist] do
 
   sh 'manifoldjs -l debug -p edgeextension package build/edgeextension/manifest/'
   cp 'build/edgeextension/package/edgeExtension.appx', "dist/albums-b-gone-#{$manifest['version']}.appx"
+end
+
+task safari: [:manifest, :build, :dist] do
+  mkdir_p 'build/albums-b-gone.safariextension/'
+  rm_rf 'build/albums-b-gone.safariextension/*'
+
+  xml = File.read('safari-manifest/Info.plist')
+  $manifest.each do |name,val|
+    next unless val.is_a?(String)
+    xml.gsub! /{{\s*#{name}\s*}}/, val
+  end
+
+  File.open('build/albums-b-gone.safariextension/Info.plist', 'w') do |f|
+    f.write xml
+  end
+
+  Dir['src/*'].each do |icon|
+    cp icon, 'build/albums-b-gone.safariextension/'
+  end
 end
