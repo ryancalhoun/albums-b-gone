@@ -77,6 +77,7 @@ task safari: [:manifest, :build, :dist] do
   File.open('build/albums-b-gone.safariextension/Info.plist', 'w') do |f|
     f.write xml
   end
+  cp 'safari-manifest/background.html', 'build/albums-b-gone.safariextension/'
 
   Dir['src/*'].each do |icon|
     cp icon, 'build/albums-b-gone.safariextension/'
