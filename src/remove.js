@@ -5,6 +5,7 @@ if(browser) {
   browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if(request == 'remove') {
       removeAlbum(sendResponse);
+      return true;
     }
   });
 } else if(safari) {
@@ -43,6 +44,4 @@ function removeAlbum(cb) {
     }
   }
 
-  return true;
 }
-
