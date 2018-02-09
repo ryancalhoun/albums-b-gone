@@ -28,7 +28,16 @@ function removeAlbum(cb) {
     return;
   }
 
-  var deleteButton = document.querySelector('a[data-tooltip-content="Delete Album"]');
+  var deleteButton;
+  try {
+    deleteButton = document.querySelector('a[data-tooltip-content="delete album" i]');
+  } catch(e) {
+    console.log(e);
+    deleteButton = document.querySelector('a[data-tooltip-content="Delete Album"]');
+    if(!deleteButton) {
+      deleteButton = document.querySelector('a[data-tooltip-content="Delete album"]');
+    }
+  }
   if(deleteButton) {
     deleteButton.click();
     setTimeout(confirmDelete, 1000);
