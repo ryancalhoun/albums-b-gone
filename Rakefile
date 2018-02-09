@@ -36,6 +36,10 @@ task edge: [:manifest, :build, :dist] do
       "browser_action_next_to_addressbar": true
     }
   }
+  manifest['browser_action']['default_icon'] = {
+    '19': 'albums-b-gone-icon-48b.png',
+    '38': 'albums-b-gone-icon-48b.png',
+  }
 
   cp 'edge-manifest/generationInfo.json', 'build/edgeextension/'
 
