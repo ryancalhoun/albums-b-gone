@@ -2,12 +2,14 @@
   var meta = document.createElement('meta');
   document.head.appendChild(meta);
 
-  var browser = window.browser || window.chrome;
+  var standardBrowser = window.browser || window.chrome;
+  if(!standardBrowser && typeof browser == 'object')
+    standardBrowser = browser;
   var safari = window.safari;
 
-  if(browser) {
-    meta.setAttribute('extension', browser.runtime.getManifest().name);
-    meta.setAttribute('version', browser.runtime.getManifest().version);
+  if(standardBrowser) {
+    meta.setAttribute('extension', standardBrowser.runtime.getManifest().name);
+    meta.setAttribute('version', standardBrowser.runtime.getManifest().version);
   } else if(safari) {
     if(window.location.hostname == 'roerunner.com') {
       var http = new XMLHttpRequest();

@@ -1,8 +1,10 @@
-var browser = window.browser || window.chrome;
+var standardBrowser = window.browser || window.chrome;
+if(!standardBrowser && typeof browser == 'object')
+  standardBrowser = browser;
 var safari = window.safari;
 
-if(browser) {
-  browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+if(standardBrowser) {
+  standardBrowser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if(request == 'remove') {
       removeAlbum(sendResponse);
       return true;

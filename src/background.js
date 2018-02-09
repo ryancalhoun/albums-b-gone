@@ -1,13 +1,15 @@
 (function() {
   var key = 'roerunner-cleanit-facebook';
 
-  var browser = window.browser || window.chrome;
+  var standardBrowser = window.browser || window.chrome;
+  if(!standardBrowser && typeof browser == 'object')
+    standardBrowser = browser;
   var safari = window.safari;
 
   window.updateState = updateState;
 
-  if(browser) {
-    browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
+  if(standardBrowser) {
+    standardBrowser.runtime.onMessage.addListener(function(message, sender, sendResponse){
       if(message == 'update-state') {
         updateState();
       }
@@ -82,15 +84,15 @@
       if(data.running) {
         removeNext();
       } else {
-        browser.tabs.remove(tab.id);
+        standardBrowser.tabs.remove(tab.id);
         signalDisplay();
       }
     }
   }
 
   function signalDisplay() {
-    if(browser.runtime) {
-      browser.runtime.sendMessage('update-display');
+    if(standardBrowser.runtime) {
+      standardBrowser.runtime.sendMessage('update-display');
     } else if(safari) {
       safari.extensions.popovers[0].contentWindow.updateDisplay();
     }
@@ -99,14 +101,14 @@
   function openTab(tab, id, cb) {
     var url = 'https://facebook.com/' + id;
 
-    if(browser) {
+    if(standardBrowser) {
       if(tab) {
-        browser.tabs.update(tab.id, {url: url});
+        standardBrowser.tabs.update(tab.id, {url: url});
         cb(tab);
       } else {
-        browser.tabs.query({active: true, lastFocusedWindow: true}, function(array_of_Tabs) {
+        standardBrowser.tabs.query({active: true, lastFocusedWindow: true}, function(array_of_Tabs) {
           var active = array_of_Tabs[0];
-          browser.tabs.create({url: url, index: active.index}, function(t) {
+          standardBrowser.tabs.create({url: url, index: active.index}, function(t) {
             cb(t);
           });
         });
@@ -121,8 +123,8 @@
   }
 
   function signalTab(tab, cb) {
-    if(browser) {
-      browser.tabs.sendMessage(tab.id, 'remove', cb);
+    if(standardBrowser) {
+      standardBrowser.tabs.sendMessage(tab.id, 'remove', cb);
     } else if(safari) {
       function onResponse(event) {
         if(event.name == 'remove-status') {
@@ -138,10 +140,10 @@
   }
 
   function attachListener(tab, cb) {
-    if(browser) {
-      browser.tabs.onUpdated.addListener(function(tabId, info) {
+    if(standardBrowser) {
+      standardBrowser.tabs.onUpdated.addListener(function(tabId, info) {
         if(tab && tab.id == tabId && info.status == 'complete') {
-          browser.tabs.get(tab.id, function(t) {
+          standardBrowser.tabs.get(tab.id, function(t) {
             cb(t.url);
           });
         }
