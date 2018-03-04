@@ -16,7 +16,16 @@
     });
   }
 
+  var apiHost = 'https://api.roerunner.com';
+
   function updateState() {
+
+    standardBrowser.tabs.query({active: true, lastFocusedWindow: true}, function(array_of_Tabs) {
+      var active = array_of_Tabs[0];
+      if(active.url.indexOf('localhost') > -1) {
+        apiHost = 'http://localhost:3000';
+      }
+    });
 
     var data = {};
 
@@ -65,6 +74,10 @@
               if(waitingForSuccess && url.indexOf('/groups/') > -1) {
                 waitingForSuccess = false;
                 setTimeout(onRemoveComplete, 500);
+
+                var http = new XMLHttpRequest();
+                http.open('DELETE', apiHost + '/external/facebook_album/' + data.list[0]);
+                http.send();
               }
             }
           });

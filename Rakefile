@@ -7,12 +7,22 @@ directory 'dist'
 
 task :manifest do
   $manifest = JSON.parse(File.read('src/manifest.json'))
+  $manifest['permissions'].select! {|perm| perm !~ /localhost/}
+
   puts "Building version #{$manifest['version']}"
 end
 
-task chrome: [:manifest, :dist] do
-  Dir.chdir('src') do
-    sh "zip ../dist/chrome-#{$manifest['version']}.zip *"
+task chrome: [:manifest, :build, :dist] do
+  rm_rf 'build/chromeextension/'
+  mkdir_p 'build/chromeextension'
+
+  Dir['src/**'].each do |file|
+    cp file, 'build/chromeextension'
+  end
+  File.write('build/chromeextension/manifest.json', JSON.pretty_generate($manifest))
+
+  Dir.chdir('build/chromeextension') do
+    sh "zip ../../dist/chrome-#{$manifest['version']}.zip *"
   end
 end
 

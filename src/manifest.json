@@ -4,7 +4,7 @@
   "name": "Albums B Gone",
   "description": "Cleans a list of Facebook albums by ID.",
   "author": "RoeRunner",
-  "version": "1.6",
+  "version": "1.7",
 
   "icons": {
     "256": "albums-b-gone-icon-256b.png",
@@ -16,7 +16,7 @@
     "default_popup": "popup.html"
   },
   "background": {
-	"scripts": [ "background.js" ]
+    "scripts": [ "background.js" ]
   },
   "content_scripts": [{
     "run_at": "document_end",
@@ -28,10 +28,11 @@
     "js": ["remove.js"]
   }],
   "permissions": [
-	"https://roerunner.com/",
+    "http://localhost:8081/",
+    "https://roerunner.com/",
     "https://www.facebook.com/",
     "activeTab",
     "tabs",
-	"storage"
+    "storage"
   ]
 }
