@@ -25,7 +25,7 @@ function removeAlbum(cb) {
     cb('not-found');
     return;
   }
-  if(!document.querySelector('.fbPhotoAlbumHeader')) {
+  if(!document.querySelector('#edit_album_header')) {
     cb('not-found');
     return;
   }

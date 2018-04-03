@@ -16,7 +16,7 @@
     });
   }
 
-  var apiHost = 'https://api.roerunner.com';
+  var apiHost;
 
   function updateState() {
 
@@ -24,6 +24,8 @@
       var active = array_of_Tabs[0];
       if(active.url.indexOf('localhost') > -1) {
         apiHost = 'http://localhost:3000';
+      } else {
+        apiHost = 'https://api.roerunner.com';
       }
     });
 
@@ -112,7 +114,7 @@
   }
 
   function openTab(tab, id, cb) {
-    var url = 'https://facebook.com/' + id;
+    var url = 'https://www.facebook.com/media/set/edit/oa.' + id + '?mask=' + id;
 
     if(standardBrowser) {
       if(tab) {
