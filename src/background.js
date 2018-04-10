@@ -164,7 +164,6 @@
       standardBrowser.tabs.sendMessage(tab.id, 'remove', cb);
     } else if(safari) {
       callback['remove-status'] = function(event) {
-        safari.application.removeEventListener('message', onResponse);
         cb(event.message);
       };
 
