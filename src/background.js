@@ -112,7 +112,7 @@
   }
 
   function signalDisplay() {
-    if(standardBrowser.runtime) {
+    if(standardBrowser) {
       standardBrowser.runtime.sendMessage('update-display');
     } else if(safari) {
       safari.extensions.popovers[0].contentWindow.updateDisplay();
