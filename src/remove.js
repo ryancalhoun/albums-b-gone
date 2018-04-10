@@ -12,15 +12,12 @@ if(standardBrowser) {
   });
 } else if(safari) {
   safari.self.addEventListener('message', function(event) {
-    console.log("Message", event);
     if(event.name == 'remove') {
       removeAlbum(function(response) {
-        console.log("Message remove-status", response);
         safari.self.tab.dispatchMessage('remove-status', response);
       });
     }
   });
-  console.log("Send remove-ready");
   safari.self.tab.dispatchMessage('remove-ready');
 }
 

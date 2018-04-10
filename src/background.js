@@ -6,6 +6,8 @@
     standardBrowser = browser;
   var safari = window.safari;
 
+  var callback = {};
+
   window.updateState = updateState;
 
   if(standardBrowser) {
@@ -13,6 +15,19 @@
       if(message == 'update-state') {
         updateState();
       }
+    });
+  } else [
+    callback['get-version'] = function() {
+      safari.application.activeBrowserWindow.activeTab.dispatchMessage('version', {
+        name: safari.extension.displayName,
+        version: safari.extension.displayVersion,
+      });
+    }
+
+    safari.application.addEventListener('message', function(event) {
+      var cb = callback[event.name];
+      if(cb)
+        cb(event);
     });
   }
 
@@ -143,18 +158,15 @@
     }
   }
 
+
   function signalTab(tab, cb) {
     if(standardBrowser) {
       standardBrowser.tabs.sendMessage(tab.id, 'remove', cb);
     } else if(safari) {
-      function onResponse(event) {
-        if(event.name == 'remove-status') {
-          safari.application.removeEventListener('message', onResponse);
-          cb(event.message);
-        }
-      }
-
-      safari.application.addEventListener('message', onResponse);
+      callback['remove-status'] = function(event) {
+        safari.application.removeEventListener('message', onResponse);
+        cb(event.message);
+      };
 
       tab.page.dispatchMessage('remove');
     }
@@ -170,13 +182,10 @@
         }
       });
     } else if(safari) {
-      function onTabReady(event) {
-        if(event.name == 'remove-ready') {
-          cb(tab.url);
-        }
+      callback['remove-ready'] = function() {
+        cb(tab.url);
       }
 
-      safari.application.addEventListener('message', onTabReady);
     }
   }
     

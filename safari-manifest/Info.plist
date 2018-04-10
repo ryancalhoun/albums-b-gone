@@ -83,6 +83,6 @@
   <key>Website</key>
   <string>https://roerunner.com/</string>
   <key>Update Manifest URL</key>
-  <string></string>
+  <string>https://roerunner.com/extensions/albums-b-gone/Update.plist</string>
 </dict>
 </plist>

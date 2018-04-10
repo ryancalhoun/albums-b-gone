@@ -12,17 +12,13 @@
     meta.setAttribute('version', standardBrowser.runtime.getManifest().version);
   } else if(safari) {
     if(window.location.hostname == 'roerunner.com') {
-      var http = new XMLHttpRequest();
-      http.onreadystatechange = function() {
-        if(http.readyState == XMLHttpRequest.DONE && http.status == 200) {
-
+      safari.self.addEventListener('message', function(event) {
+        if(event.name == 'version') {
+          meta.setAttribute('extension', event.message.name);
+          meta.setAttribute('version', event.message.version);
         }
-      };
-
-
-      safari.extension.baseURI + "Info.plist"
+      });
+      safari.self.tab.dispatchMessage('get-version');
     }
-    meta.setAttribute('extension', safari.extension.displayName);
-    meta.setAttribute('version', safari.extension.displayVersion);
   }
 })();
