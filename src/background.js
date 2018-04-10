@@ -19,7 +19,7 @@
   } else {
     callback['get-version'] = function() {
       safari.application.activeBrowserWindow.activeTab.page.dispatchMessage('version', {
-        name: safari.extension.displayName,
+        name: 'Albums B Gone',
         version: safari.extension.displayVersion
       });
     };
