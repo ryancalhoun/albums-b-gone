@@ -16,7 +16,7 @@
         updateState();
       }
     });
-  } else [
+  } else {
     callback['get-version'] = function() {
       safari.application.activeBrowserWindow.activeTab.dispatchMessage('version', {
         name: safari.extension.displayName,
