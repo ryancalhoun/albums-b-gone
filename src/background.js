@@ -115,7 +115,7 @@
     if(standardBrowser) {
       standardBrowser.runtime.sendMessage('update-display');
     } else if(safari) {
-      safari.extensions.popovers[0].contentWindow.updateDisplay();
+      safari.extension.popovers[0].contentWindow.updateDisplay();
     }
   }
 
