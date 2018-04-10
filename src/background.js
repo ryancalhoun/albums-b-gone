@@ -20,14 +20,18 @@
 
   function updateState() {
 
-    standardBrowser.tabs.query({active: true, lastFocusedWindow: true}, function(array_of_Tabs) {
-      var active = array_of_Tabs[0];
-      if(active.url.indexOf('localhost') > -1) {
-        apiHost = 'http://localhost:3000';
-      } else {
-        apiHost = 'https://api.roerunner.com';
-      }
-    });
+    if(standardBrowser) {
+      standardBrowser.tabs.query({active: true, lastFocusedWindow: true}, function(array_of_Tabs) {
+        var active = array_of_Tabs[0];
+        if(active.url.indexOf('localhost') > -1) {
+          apiHost = 'http://localhost:3000';
+        } else {
+          apiHost = 'https://api.roerunner.com';
+        }
+      });
+    } else {
+      apiHost = 'https://api.roerunner.com';
+    }
 
     var data = {};
 
@@ -62,7 +66,6 @@
               if(url.indexOf(data.list[0] + "") > -1) {
                 doRemove = false;
                 signalTab(t, function(s) {
-                  console.log("Signal", s);
                   if(s == 'ok') {
                     waitingForSuccess = true;
                   }
@@ -72,7 +75,6 @@
                 });
               }
             } else {
-              console.log("Group page", waitingForSuccess, url);
               if(waitingForSuccess && url.indexOf('/groups/') > -1) {
                 waitingForSuccess = false;
                 setTimeout(onRemoveComplete, 500);
@@ -99,7 +101,11 @@
       if(data.running) {
         removeNext();
       } else {
-        standardBrowser.tabs.remove(tab.id);
+        if(standardBrowser) {
+          standardBrowser.tabs.remove(tab.id);
+        } else if(safari) {
+          tab.close();
+        }
         signalDisplay();
       }
     }
@@ -129,11 +135,19 @@
         });
       }
     } else if(safari) {
+      function onTabReady(event) {
+        if(event.name == 'remove-ready') {
+          safari.application.removeEventListener('message', onTabReady);
+          cb(tab);
+        }
+      }
+
+      safari.application.addEventListener('message', onTabReady);
+
       if(!tab) {
         tab = safari.application.activeBrowserWindow.openTab();
       }
       tab.url = url;
-      cb(tab);
     }
   }
 
@@ -143,11 +157,11 @@
     } else if(safari) {
       function onResponse(event) {
         if(event.name == 'remove-status') {
+          safari.application.removeEventListener('message', onResponse);
           cb(event.message);
         }
       }
 
-      safari.application.removeEventListener('message', onResponse);
       safari.application.addEventListener('message', onResponse);
 
       tab.page.dispatchMessage('remove');

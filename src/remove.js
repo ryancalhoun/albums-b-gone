@@ -18,6 +18,7 @@ if(standardBrowser) {
       });
     }
   });
+  safari.self.tab.dispatchMessage('remove-ready');
 }
 
 function removeAlbum(cb) {
