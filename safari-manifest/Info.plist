@@ -81,7 +81,7 @@
   <key>Author</key>
   <string>{{ author }}</string>
   <key>Website</key>
-  <string>https://roerunner.come/</string>
+  <string>https://roerunner.com/</string>
   <key>Update Manifest URL</key>
   <string></string>
 </dict>

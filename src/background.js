@@ -135,19 +135,11 @@
         });
       }
     } else if(safari) {
-      function onTabReady(event) {
-        if(event.name == 'remove-ready') {
-          safari.application.removeEventListener('message', onTabReady);
-          cb(tab);
-        }
-      }
-
-      safari.application.addEventListener('message', onTabReady);
-
       if(!tab) {
         tab = safari.application.activeBrowserWindow.openTab();
       }
       tab.url = url;
+      cb(tab);
     }
   }
 
@@ -178,9 +170,13 @@
         }
       });
     } else if(safari) {
-      tab.addEventListener('navigation', function() {
-        cb(tab.url);
-      });
+      function onTabReady(event) {
+        if(event.name == 'remove-ready') {
+          cb(tab.url);
+        }
+      }
+
+      safari.application.addEventListener('message', onTabReady);
     }
   }
     
