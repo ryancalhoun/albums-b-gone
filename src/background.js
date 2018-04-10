@@ -20,9 +20,9 @@
     callback['get-version'] = function() {
       safari.application.activeBrowserWindow.activeTab.dispatchMessage('version', {
         name: safari.extension.displayName,
-        version: safari.extension.displayVersion,
+        version: safari.extension.displayVersion
       });
-    }
+    };
 
     safari.application.addEventListener('message', function(event) {
       var cb = callback[event.name];
