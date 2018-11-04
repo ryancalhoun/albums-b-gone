@@ -42,8 +42,10 @@ function removeAlbum(cb) {
     }
   }
   if(deleteButton) {
-    deleteButton.click();
-    setTimeout(confirmDelete, 1000);
+    setTimeout(function() {
+      deleteButton.click();
+      setTimeout(confirmDelete, 1000 + Math.random() * 2000);
+    }, 1000 + Math.random() * 2000);
   }
 
   function confirmDelete() {
