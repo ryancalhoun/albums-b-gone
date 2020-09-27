@@ -90,7 +90,7 @@
                 });
               }
             } else {
-              if(waitingForSuccess && url.indexOf('/groups/') > -1) {
+              if(waitingForSuccess && (url.indexOf('/groups/') || url.indexOf('/photos_albums') > -1)) {
                 waitingForSuccess = false;
                 setTimeout(onRemoveComplete, 500);
 

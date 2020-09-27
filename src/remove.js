@@ -26,11 +26,38 @@ function removeAlbum(cb) {
     cb('not-found');
     return;
   }
-  if(!document.querySelector('#edit_album_header')) {
+  if(document.querySelector('#edit_album_header')) {
+    removeAlbumClassic(cb);
+  } else if(document.querySelector('[aria-label="Album Edit Composer"]')) {
+    removeAlbumNew(cb); 
+  } else {
     cb('not-found');
-    return;
+  }
+}
+
+function removeAlbumNew(cb) {
+  var deleteButton = document.querySelector('[aria-label="Delete Album"]');
+
+  if(deleteButton) {
+    setTimeout(function() {
+      deleteButton.click();
+      setTimeout(confirmDelete, 1000 + Math.random() * 2000);
+    }, 1000 + Math.random() * 2000);
   }
 
+  function confirmDelete() {
+    var confirmButton = document.querySelector('[role="dialog"] [aria-label="Delete Album"]');
+    if(confirmButton) {
+      cb('ok');
+      confirmButton.click();
+    } else {
+      setTimeout(confirmDelete, 500);
+    }
+  }
+}
+
+
+function removeAlbumClassic(cb) {
   var deleteButton;
   try {
     deleteButton = document.querySelector('a[data-tooltip-content="delete album" i]');
